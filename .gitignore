@@ -1,0 +1,47 @@
+# C++ and CMake
+build/
+bin/
+out/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+*.cmake
+Makefile
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.obj
+*.exe
+*.pdb
+*.ilk
+*.lib
+*.dll
+*.exp
+*.res
+*.tlog
+*.lastbuildstate
+*.idb
+*.cache
+*.recipe
+
+# IDEs
+.vs/
+.vscode/
+*.swp
+*.swo
+*.user
+
+# Qt
+*_autogen/
+*.moc
+moc_*.cpp
+qrc_*.cpp
+ui_*.h
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Tools
+convert_to_utf8/
