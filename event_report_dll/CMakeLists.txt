@@ -13,6 +13,11 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
     set(CMAKE_PREFIX_PATH "D:/Qt/Qt5.15.17/5.15.17/msvc2015_64")
 endif()
 
+# 开启多核编译
+if(MSVC)
+    add_compile_options(/MP)
+endif()
+
 # 定义导出宏
 add_compile_definitions(EVENT_REPORT_DLL_EXPORTS)
 
