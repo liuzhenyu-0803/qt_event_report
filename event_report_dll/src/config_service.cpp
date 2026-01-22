@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include "event_report_constants.h"
 
 ConfigService::ConfigService(HttpService* httpService, QObject* parent)
     : QObject(parent)
@@ -56,9 +57,9 @@ void ConfigService::fetchApiKeyFromServer()
 void ConfigService::loadApiKeyFromRegistry()
 {
     QMutexLocker locker(&m_mutex);
-    QSettings settings("HKEY_CURRENT_USER\\Software\\EventReport", QSettings::NativeFormat);
+    QSettings settings(EventReport::REGISTRY_PATH, QSettings::NativeFormat);
     
-    QString registryApiKey = settings.value("amplitude_api_key").toString();
+    QString registryApiKey = settings.value(EventReport::REG_KEY_AMPLITUDE_API_KEY).toString();
     if (!registryApiKey.isEmpty())
     {
         m_apiKey = registryApiKey;
@@ -75,8 +76,8 @@ void ConfigService::loadApiKeyFromRegistry()
 
 void ConfigService::saveApiKeyToRegistry(const QString& apiKey)
 {
-    QSettings settings("HKEY_CURRENT_USER\\Software\\EventReport", QSettings::NativeFormat);
-    settings.setValue("amplitude_api_key", apiKey);
+    QSettings settings(EventReport::REGISTRY_PATH, QSettings::NativeFormat);
+    settings.setValue(EventReport::REG_KEY_AMPLITUDE_API_KEY, apiKey);
     qInfo() << "ConfigService:saveApiKeyToRegistry: API Key saved to registry";
 }
 
@@ -106,7 +107,7 @@ void ConfigService::onServerReplyFinished(QNetworkReply* reply)
     }
 
     QJsonObject root = doc.object();
-    QString serverApiKey = root.value("amplitude_api_key").toString();
+    QString serverApiKey = root.value(EventReport::REG_KEY_AMPLITUDE_API_KEY).toString();
 
     if (serverApiKey.isEmpty())
     {

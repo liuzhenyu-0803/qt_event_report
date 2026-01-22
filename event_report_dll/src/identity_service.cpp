@@ -7,6 +7,7 @@
 #include <QDebug>
 #include <QMutexLocker>
 #include <QThread>
+#include "event_report_constants.h"
 
 IdentityService::IdentityService(QObject* parent) : QObject(parent)
 {
@@ -21,12 +22,12 @@ QString IdentityService::getUserID()
     QMutexLocker locker(&m_mutex);
     if (!m_userId.isEmpty()) return m_userId;
 
-    QSettings settings("HKEY_CURRENT_USER\\Software\\EventReport", QSettings::NativeFormat);
-    m_userId = settings.value("user_id").toString();
+    QSettings settings(EventReport::REGISTRY_PATH, QSettings::NativeFormat);
+    m_userId = settings.value(EventReport::REG_KEY_USER_ID).toString();
     if (m_userId.isEmpty())
     {
         m_userId = QUuid::createUuid().toString(QUuid::WithoutBraces);
-        settings.setValue("user_id", m_userId);
+        settings.setValue(EventReport::REG_KEY_USER_ID, m_userId);
     }
     return m_userId;
 }
