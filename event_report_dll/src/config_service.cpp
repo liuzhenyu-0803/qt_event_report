@@ -1,8 +1,6 @@
 ﻿#include "config_service.h"
 #include "http_service.h"
 #include <QSettings>
-#include <QMutex>
-#include <QMutexLocker>
 #include <QDebug>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -29,25 +27,24 @@ void ConfigService::init()
 
 QString ConfigService::getAmplitudeApiKey() const
 {
-    QMutexLocker locker(&m_mutex);
     return m_apiKey;
 }
 
 QString ConfigService::getEventTrackEndpoint() const
 {
-    return m_eventTrackEndpoint;
+    return EventReport::EVENT_TRACK_ENDPOINT;
 }
 
 QString ConfigService::getFeatureFlagEndpoint() const
 {
-    return m_featureFlagEndpoint;
+    return EventReport::FEATURE_FLAG_ENDPOINT;
 }
 
 void ConfigService::fetchApiKeyFromServer()
 {
-    qInfo() << "ConfigService:fetchApiKeyFromServer: Fetching API Key from server:" << m_apiKeyServerUrl;
+    qInfo() << "ConfigService:fetchApiKeyFromServer: Fetching API Key from server:" << EventReport::API_KEY_SERVER_URL;
 
-    QNetworkReply* reply = m_httpService->get(m_apiKeyServerUrl);
+    QNetworkReply* reply = m_httpService->get(EventReport::API_KEY_SERVER_URL);
     connect(reply, &QNetworkReply::finished, this, [this, reply]()
     {
         onServerReplyFinished(reply);
@@ -56,7 +53,6 @@ void ConfigService::fetchApiKeyFromServer()
 
 void ConfigService::loadApiKeyFromRegistry()
 {
-    QMutexLocker locker(&m_mutex);
     QSettings settings(EventReport::REGISTRY_PATH, QSettings::NativeFormat);
     
     QString registryApiKey = settings.value(EventReport::REG_KEY_AMPLITUDE_API_KEY).toString();
@@ -68,7 +64,7 @@ void ConfigService::loadApiKeyFromRegistry()
     else
     {
         // 注册表中没有，使用硬编码默认值并写入注册表
-        m_apiKey = m_defaultApiKey;
+        m_apiKey = EventReport::DEFAULT_AMPLITUDE_API_KEY;
         saveApiKeyToRegistry(m_apiKey);
         qInfo() << "ConfigService:loadApiKeyFromRegistry: Using default API Key and saved to registry";
     }
@@ -116,17 +112,14 @@ void ConfigService::onServerReplyFinished(QNetworkReply* reply)
     }
 
     // 更新 API Key
+    if (m_apiKey != serverApiKey)
     {
-        QMutexLocker locker(&m_mutex);
-        if (m_apiKey != serverApiKey)
-        {
-            m_apiKey = serverApiKey;
-            saveApiKeyToRegistry(m_apiKey);
-            qInfo() << "ConfigService:onServerReplyFinished: API Key updated from server and saved to registry";
-        }
-        else
-        {
-            qInfo() << "ConfigService:onServerReplyFinished: API Key from server matches current value";
-        }
+        m_apiKey = serverApiKey;
+        saveApiKeyToRegistry(m_apiKey);
+        qInfo() << "ConfigService:onServerReplyFinished: API Key updated from server and saved to registry";
+    }
+    else
+    {
+        qInfo() << "ConfigService:onServerReplyFinished: API Key from server matches current value";
     }
 }

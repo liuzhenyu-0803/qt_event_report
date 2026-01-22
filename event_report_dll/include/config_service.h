@@ -4,7 +4,6 @@
 #include <QObject>
 #include <QString>
 #include <QNetworkReply>
-#include <QMutex>
 #include "event_report_dll_export.h"
 #include "http_service.h"
 
@@ -55,11 +54,6 @@ private:
 private:
     HttpService* m_httpService = nullptr;
     QString m_apiKey = "";
-    mutable QMutex m_mutex;
-    const QString m_defaultApiKey = "14283a6672ee87df21326b38aa4a5604";
-    const QString m_eventTrackEndpoint = "https://api2.amplitude.com/2/httpapi";
-    const QString m_featureFlagEndpoint = "https://api.lab.amplitude.com/v1/vardata";
-    const QString m_apiKeyServerUrl = "https://your-server.com/api/get-amplitude-key";  // 配置服务端地址
 };
 
 #endif // CONFIG_SERVICE_H

@@ -5,7 +5,6 @@
 #include <QRegExp>
 #include <QSysInfo>
 #include <QDebug>
-#include <QMutexLocker>
 #include <QThread>
 #include "event_report_constants.h"
 
@@ -19,7 +18,6 @@ IdentityService::~IdentityService()
 
 QString IdentityService::getUserID()
 {
-    QMutexLocker locker(&m_mutex);
     if (!m_userId.isEmpty()) return m_userId;
 
     QSettings settings(EventReport::REGISTRY_PATH, QSettings::NativeFormat);
@@ -34,7 +32,6 @@ QString IdentityService::getUserID()
 
 QString IdentityService::getDeviceID()
 {
-    QMutexLocker locker(&m_mutex);
     if (!m_deviceId.isEmpty()) return m_deviceId;
 
     QString cpuInfo = "Unknown CPU";

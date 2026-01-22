@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include <QString>
-#include <QMutex>
 #include "event_report_dll_export.h"
 
 /**
@@ -38,7 +37,6 @@ private:
 private:
     QString m_userId = "";
     QString m_deviceId = "";
-    mutable QMutex m_mutex;
 };
 
 #endif // IDENTITY_SERVICE_H
