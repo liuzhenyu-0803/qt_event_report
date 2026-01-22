@@ -45,3 +45,4 @@ Thumbs.db
 
 # Tools
 convert_to_utf8/
+*.log

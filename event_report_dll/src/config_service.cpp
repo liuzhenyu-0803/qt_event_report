@@ -42,9 +42,9 @@ QString ConfigService::getFeatureFlagEndpoint() const
 
 void ConfigService::fetchApiKeyFromServer()
 {
-    qInfo() << "ConfigService:fetchApiKeyFromServer: Fetching API Key from server:" << EventReport::API_KEY_SERVER_URL;
+    qInfo() << "ConfigService:fetchApiKeyFromServer: Fetching API Key from server:" << EventReport::STORE_SERVER_URL;
 
-    QNetworkReply* reply = m_httpService->get(EventReport::API_KEY_SERVER_URL);
+    QNetworkReply* reply = m_httpService->get(EventReport::STORE_SERVER_URL);
     connect(reply, &QNetworkReply::finished, this, [this, reply]()
     {
         onServerReplyFinished(reply);
