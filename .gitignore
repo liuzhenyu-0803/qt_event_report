@@ -17,6 +17,8 @@ Makefile
 *.ilk
 *.lib
 *.dll
+!**/third_party/*.lib
+!**/third_party/*.dll
 *.exp
 *.res
 *.tlog

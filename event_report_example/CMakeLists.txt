@@ -27,16 +27,30 @@ add_executable(event_report_example
     ${PROJECT_SOURCES}
 )
 
-# 设置包含目录
-target_include_directories(event_report_example PRIVATE
-    "${CMAKE_CURRENT_SOURCE_DIR}/../event_report_dll/include"
-)
+# 链接逻辑
+if(TARGET event_report_dll)
+    # ==========================================
+    # 场景 A：作为子项目构建 (顶层集成)
+    # ==========================================
+    target_link_libraries(event_report_example PRIVATE
+        Qt5::Widgets
+        Qt5::Network
+        event_report_dll
+    )
 
-# 链接与部署逻辑 (纯手动路径模式)
-if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+    # 在集成构建模式下，由于我们在顶层 CMakeLists.txt 中设置了统一的输出目录 (CMAKE_RUNTIME_OUTPUT_DIRECTORY)，
+    # event_report_dll 和第三方 DLL 已经生成或拷贝到了统一的 bin 目录。
+    # 因此这里不再需要重复执行拷贝操作，避免 wildcard 通配符在 cmake -E 中失效以及路径冲突问题。
+else()
     # ==========================================
-    # 场景 A：独立构建模式
+    # 场景 B：独立构建模式 (使用预编译库)
     # ==========================================
+    
+    # 设置包含目录
+    target_include_directories(event_report_example PRIVATE
+        "${CMAKE_CURRENT_SOURCE_DIR}/../event_report_dll/include"
+    )
+
     # 库文件位于同级库目录下的 bin 文件夹中
     set(EVENT_REPORT_DLL_BASE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../event_report_dll/bin")
     
@@ -48,7 +62,7 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
         optimized "${EVENT_REPORT_DLL_BASE_DIR}/Release/event_report.lib"
     )
 
-    # 独立构建时，必须手动拷贝 DLL 到本工程输出目录，否则程序无法运行
+    # 独立构建时，必须手动拷贝 DLL 到本工程输出目录
     add_custom_command(TARGET event_report_example POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
             "${EVENT_REPORT_DLL_BASE_DIR}/$<CONFIG>/event_report.dll"
@@ -68,26 +82,6 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
             VERBATIM
         )
     endif()
-else()
-    # ==========================================
-    # 场景 B：非独立构建模式 (顶层集成)
-    # ==========================================
-    # 库文件位于顶层输出目录的 bin 中
-    set(EVENT_REPORT_DLL_BASE_DIR "${CMAKE_SOURCE_DIR}/bin")
-    
-    # 虽然在同一个工程中，但仍采用纯手动路径方式链接 .lib
-    target_link_libraries(event_report_example PRIVATE
-        Qt5::Widgets
-        Qt5::Network
-        debug     "${EVENT_REPORT_DLL_BASE_DIR}/Debug/event_report.lib"
-        optimized "${EVENT_REPORT_DLL_BASE_DIR}/Release/event_report.lib"
-    )
-    
-    # 添加对 event_report_dll 的构建依赖，确保 DLL 先于 example 构建完成
-    add_dependencies(event_report_example event_report_dll)
-    
-    # 注意：此时 exe 和 dll 已经由顶层配置生成到了同一个 bin 目录下
-    # 因此无需执行 POST_BUILD 拷贝动作。
 endif()
 
 # 设置可执行文件属性
