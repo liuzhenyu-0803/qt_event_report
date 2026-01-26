@@ -49,3 +49,6 @@ Thumbs.db
 convert_to_utf8/
 *.log
 convert_log.txt
+
+# Test artifacts
+test/
