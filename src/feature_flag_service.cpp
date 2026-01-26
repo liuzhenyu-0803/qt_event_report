@@ -1,7 +1,7 @@
-﻿#include "feature_flag_service.h"
-#include "identity_service.h"
-#include "config_service.h"
-#include "http_service.h"
+﻿#include "event_report/feature_flag_service.h"
+#include "event_report/identity_service.h"
+#include "event_report/config_service.h"
+#include "event_report/http_service.h"
 #include <QUrl>
 #include <QUrlQuery>
 #include <QMutexLocker>
@@ -9,6 +9,8 @@
 #include <QDebug>
 #include <QJsonDocument>
 #include <QJsonObject>
+
+namespace event_report {
 
 FeatureFlagService::FeatureFlagService(IdentityService* identityService,
                                        ConfigService* configService,
@@ -112,3 +114,5 @@ void FeatureFlagService::onReplyFinished(QNetworkReply* reply)
     qInfo() << "FeatureFlagService:onReplyFinished: Successfully loaded" << m_flags.size() << "flags";
     emit signalFlagsChanged(true);
 }
+
+} // namespace event_report

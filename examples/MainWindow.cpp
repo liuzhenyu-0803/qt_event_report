@@ -1,9 +1,11 @@
 ﻿#include "MainWindow.h"
-#include "event_report_manager.h"
-#include "feature_flag_service.h"
+#include "event_report/event_report_manager.h"
+#include "event_report/feature_flag_service.h"
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QDebug>
+
+using namespace event_report;
 
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 {

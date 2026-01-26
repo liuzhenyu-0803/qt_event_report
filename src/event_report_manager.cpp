@@ -1,6 +1,8 @@
-﻿#include "event_report_manager.h"
+﻿#include "event_report/event_report_manager.h"
 #include <QDebug>
 #include <QCoreApplication>
+
+namespace event_report {
 
 EventReportManager::EventReportManager(QObject* parent)
     : QObject(parent)
@@ -134,3 +136,5 @@ VariantInfo EventReportManager::getFlag(const QString& flagKey) const
 {
     return m_featureFlagService->getFlag(flagKey);
 }
+
+} // namespace event_report

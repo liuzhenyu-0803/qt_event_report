@@ -1,10 +1,12 @@
-﻿#include "config_service.h"
-#include "http_service.h"
+﻿#include "event_report/config_service.h"
+#include "event_report/http_service.h"
 #include <QSettings>
 #include <QDebug>
 #include <QJsonDocument>
 #include <QJsonObject>
-#include "event_report_constants.h"
+#include "event_report/event_report_constants.h"
+
+namespace event_report {
 
 ConfigService::ConfigService(HttpService* httpService, QObject* parent)
     : QObject(parent)
@@ -32,19 +34,19 @@ QString ConfigService::getAmplitudeApiKey() const
 
 QString ConfigService::getEventTrackEndpoint() const
 {
-    return EventReport::EVENT_TRACK_ENDPOINT;
+    return EVENT_TRACK_ENDPOINT;
 }
 
 QString ConfigService::getFeatureFlagEndpoint() const
 {
-    return EventReport::FEATURE_FLAG_ENDPOINT;
+    return FEATURE_FLAG_ENDPOINT;
 }
 
 void ConfigService::fetchApiKeyFromServer()
 {
-    qInfo() << "ConfigService:fetchApiKeyFromServer: Fetching API Key from server:" << EventReport::STORE_SERVER_URL;
+    qInfo() << "ConfigService:fetchApiKeyFromServer: Fetching API Key from server:" << STORE_SERVER_URL;
 
-    QNetworkReply* reply = m_httpService->get(EventReport::STORE_SERVER_URL);
+    QNetworkReply* reply = m_httpService->get(STORE_SERVER_URL);
     connect(reply, &QNetworkReply::finished, this, [this, reply]()
     {
         onServerReplyFinished(reply);
@@ -53,9 +55,9 @@ void ConfigService::fetchApiKeyFromServer()
 
 void ConfigService::loadApiKeyFromRegistry()
 {
-    QSettings settings(EventReport::REGISTRY_PATH, QSettings::NativeFormat);
+    QSettings settings(REGISTRY_PATH, QSettings::NativeFormat);
     
-    QString registryApiKey = settings.value(EventReport::REG_KEY_AMPLITUDE_API_KEY).toString();
+    QString registryApiKey = settings.value(REG_KEY_AMPLITUDE_API_KEY).toString();
     if (!registryApiKey.isEmpty())
     {
         m_apiKey = registryApiKey;
@@ -64,7 +66,7 @@ void ConfigService::loadApiKeyFromRegistry()
     else
     {
         // 注册表中没有，使用硬编码默认值并写入注册表
-        m_apiKey = EventReport::DEFAULT_AMPLITUDE_API_KEY;
+        m_apiKey = DEFAULT_AMPLITUDE_API_KEY;
         saveApiKeyToRegistry(m_apiKey);
         qInfo() << "ConfigService:loadApiKeyFromRegistry: Using default API Key and saved to registry";
     }
@@ -72,8 +74,8 @@ void ConfigService::loadApiKeyFromRegistry()
 
 void ConfigService::saveApiKeyToRegistry(const QString& apiKey)
 {
-    QSettings settings(EventReport::REGISTRY_PATH, QSettings::NativeFormat);
-    settings.setValue(EventReport::REG_KEY_AMPLITUDE_API_KEY, apiKey);
+    QSettings settings(REGISTRY_PATH, QSettings::NativeFormat);
+    settings.setValue(REG_KEY_AMPLITUDE_API_KEY, apiKey);
     qInfo() << "ConfigService:saveApiKeyToRegistry: API Key saved to registry";
 }
 
@@ -103,7 +105,7 @@ void ConfigService::onServerReplyFinished(QNetworkReply* reply)
     }
 
     QJsonObject root = doc.object();
-    QString serverApiKey = root.value(EventReport::REG_KEY_AMPLITUDE_API_KEY).toString();
+    QString serverApiKey = root.value(REG_KEY_AMPLITUDE_API_KEY).toString();
 
     if (serverApiKey.isEmpty())
     {
@@ -123,3 +125,5 @@ void ConfigService::onServerReplyFinished(QNetworkReply* reply)
         qInfo() << "ConfigService:onServerReplyFinished: API Key from server matches current value";
     }
 }
+
+} // namespace event_report

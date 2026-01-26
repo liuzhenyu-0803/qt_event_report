@@ -1,4 +1,4 @@
-﻿#include "identity_service.h"
+﻿#include "event_report/identity_service.h"
 #include <QSettings>
 #include <QUuid>
 #include <QProcess>
@@ -6,7 +6,9 @@
 #include <QSysInfo>
 #include <QDebug>
 #include <QThread>
-#include "event_report_constants.h"
+#include "event_report/event_report_constants.h"
+
+namespace event_report {
 
 IdentityService::IdentityService(QObject* parent) : QObject(parent)
 {
@@ -20,12 +22,12 @@ QString IdentityService::getUserID()
 {
     if (!m_userId.isEmpty()) return m_userId;
 
-    QSettings settings(EventReport::REGISTRY_PATH, QSettings::NativeFormat);
-    m_userId = settings.value(EventReport::REG_KEY_USER_ID).toString();
+    QSettings settings(REGISTRY_PATH, QSettings::NativeFormat);
+    m_userId = settings.value(REG_KEY_USER_ID).toString();
     if (m_userId.isEmpty())
     {
         m_userId = QUuid::createUuid().toString(QUuid::WithoutBraces);
-        settings.setValue(EventReport::REG_KEY_USER_ID, m_userId);
+        settings.setValue(REG_KEY_USER_ID, m_userId);
     }
     return m_userId;
 }
@@ -79,3 +81,5 @@ void IdentityService::init()
     getDeviceID();
     qInfo() << "IdentityService:init: Init finished in thread:" << QThread::currentThread() << "DeviceID:" << m_deviceId;
 }
+
+} // namespace event_report

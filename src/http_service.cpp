@@ -1,4 +1,6 @@
-﻿#include "http_service.h"
+﻿#include "event_report/http_service.h"
+
+namespace event_report {
 
 HttpService::HttpService(QObject* parent) : QObject(parent)
 {
@@ -39,3 +41,5 @@ QNetworkReply* HttpService::get(const QString& url, const QMap<QByteArray, QByte
 
     return m_networkManager->get(request);
 }
+
+} // namespace event_report

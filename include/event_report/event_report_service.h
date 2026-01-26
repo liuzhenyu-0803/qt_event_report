@@ -1,7 +1,7 @@
 ﻿#ifndef EVENT_REPORT_SERVICE_H
 #define EVENT_REPORT_SERVICE_H
 
-#include "event_report_dll_export.h"
+#include "event_report_export.h"
 #include <QObject>
 #include <QString>
 #include <QVariantMap>
@@ -10,6 +10,9 @@
 #include <QJsonArray>
 #include <QJsonObject>
 
+namespace event_report {
+
+// 前置声明
 class IdentityService;
 class ConfigService;
 class HttpService;
@@ -27,7 +30,7 @@ struct TrackEvent
 /**
  * @brief 底层上报服务，直接负责与 Amplitude 通信
  */
-class EVENT_REPORT_DLL_API EventReportService : public QObject
+class EVENT_REPORT_API EventReportService : public QObject
 {
     Q_OBJECT
 public:
@@ -71,5 +74,7 @@ private:
     ConfigService* m_configService = nullptr;
     HttpService* m_httpService = nullptr;
 };
+
+} // namespace event_report
 
 #endif // EVENT_REPORT_SERVICE_H

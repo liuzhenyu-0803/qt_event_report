@@ -1,7 +1,7 @@
 ﻿#ifndef EVENT_REPORT_MANAGER_H
 #define EVENT_REPORT_MANAGER_H
 
-#include "event_report_dll_export.h"
+#include "event_report_export.h"
 #include "http_service.h"
 #include "identity_service.h"
 #include "config_service.h"
@@ -11,11 +11,13 @@
 #include <QThread>
 #include <QMutex>
 
+namespace event_report {
+
 /**
  * @brief 核心管理类，负责维护后台线程和所有服务的生命周期
  * 所有公共接口都是线程安全的，会自动将任务调度到工作线程执行
  */
-class EVENT_REPORT_DLL_API EventReportManager : public QObject
+class EVENT_REPORT_API EventReportManager : public QObject
 {
     Q_OBJECT
 public:
@@ -87,5 +89,7 @@ private:
     EventReportService* m_eventReportService = nullptr;
     FeatureFlagService* m_featureFlagService = nullptr;
 };
+
+} // namespace event_report
 
 #endif // EVENT_REPORT_MANAGER_H

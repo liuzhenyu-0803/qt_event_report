@@ -6,12 +6,14 @@
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QMap>
-#include "event_report_dll_export.h"
+#include "event_report_export.h"
+
+namespace event_report {
 
 /**
  * @brief 统一的网络服务类 (单例)，管理 QNetworkAccessManager 资源
  */
-class EVENT_REPORT_DLL_API HttpService : public QObject
+class EVENT_REPORT_API HttpService : public QObject
 {
     Q_OBJECT
 public:
@@ -40,5 +42,7 @@ private:
 private:
     QNetworkAccessManager* m_networkManager = nullptr;
 };
+
+} // namespace event_report
 
 #endif // HTTP_SERVICE_H

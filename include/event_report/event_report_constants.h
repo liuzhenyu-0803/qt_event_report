@@ -3,7 +3,7 @@
 
 #include <QString>
 
-namespace EventReport
+namespace event_report
 {
     /**
      * @brief 注册表相关常量

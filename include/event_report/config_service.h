@@ -4,13 +4,15 @@
 #include <QObject>
 #include <QString>
 #include <QNetworkReply>
-#include "event_report_dll_export.h"
+#include "event_report_export.h"
 #include "http_service.h"
+
+namespace event_report {
 
 /**
  * @brief 配置服务类（单例模式），统一管理 API Key 和 Endpoint
  */
-class EVENT_REPORT_DLL_API ConfigService : public QObject
+class EVENT_REPORT_API ConfigService : public QObject
 {
     Q_OBJECT
 public:
@@ -55,5 +57,7 @@ private:
     HttpService* m_httpService = nullptr;
     QString m_apiKey = "";
 };
+
+} // namespace event_report
 
 #endif // CONFIG_SERVICE_H

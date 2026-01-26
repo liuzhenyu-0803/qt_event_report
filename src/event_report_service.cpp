@@ -1,7 +1,7 @@
-﻿#include "event_report_service.h"
-#include "identity_service.h"
-#include "config_service.h"
-#include "http_service.h"
+﻿#include "event_report/event_report_service.h"
+#include "event_report/identity_service.h"
+#include "event_report/config_service.h"
+#include "event_report/http_service.h"
 #include <QThread>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -16,6 +16,8 @@
 #include <QFile>
 #include <QDir>
 #include <QTextStream>
+
+namespace event_report {
 
 EventReportService::EventReportService(IdentityService* identityService,
                                      ConfigService* configService,
@@ -197,3 +199,5 @@ QJsonObject EventReportService::createEventObject(const QString& eventType, cons
     eventObj["ip"] = "$remote";
     return eventObj;
 }
+
+} // namespace event_report

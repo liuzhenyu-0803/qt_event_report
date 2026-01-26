@@ -1,7 +1,7 @@
 ﻿#ifndef FEATURE_FLAG_SERVICE_H
 #define FEATURE_FLAG_SERVICE_H
 
-#include "event_report_dll_export.h"
+#include "event_report_export.h"
 #include <QObject>
 #include <QString>
 #include <QNetworkAccessManager>
@@ -10,6 +10,9 @@
 #include <QVariant>
 #include <QMutex>
 
+namespace event_report {
+
+// 前置声明
 class IdentityService;
 class ConfigService;
 class HttpService;
@@ -17,7 +20,7 @@ class HttpService;
 /**
  * @brief 变体信息结构
  */
-struct VariantInfo 
+struct VariantInfo
 {
     QString key;       ///< 变体 Key (value)
     QVariant payload;  ///< 变体负载数据 (JSON)
@@ -26,7 +29,7 @@ struct VariantInfo
 /**
  * @brief Feature Flag 服务，负责从 Amplitude 获取功能开关内容
  */
-class EVENT_REPORT_DLL_API FeatureFlagService : public QObject
+class EVENT_REPORT_API FeatureFlagService : public QObject
 {
     Q_OBJECT
 
@@ -75,5 +78,7 @@ private:
     QMap<QString, VariantInfo> m_flags;
     mutable QMutex m_mutex;
 };
+
+} // namespace event_report
 
 #endif // FEATURE_FLAG_SERVICE_H

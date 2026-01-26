@@ -3,12 +3,14 @@
 
 #include <QObject>
 #include <QString>
-#include "event_report_dll_export.h"
+#include "event_report_export.h"
+
+namespace event_report {
 
 /**
  * @brief 身份服务类（单例模式），管理用户和设备标识
  */
-class EVENT_REPORT_DLL_API IdentityService : public QObject
+class EVENT_REPORT_API IdentityService : public QObject
 {
     Q_OBJECT
 public:
@@ -38,5 +40,7 @@ private:
     QString m_userId = "";
     QString m_deviceId = "";
 };
+
+} // namespace event_report
 
 #endif // IDENTITY_SERVICE_H
