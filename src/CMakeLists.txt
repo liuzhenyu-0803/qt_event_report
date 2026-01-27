@@ -90,9 +90,24 @@ install(TARGETS event_report
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
 
+# 安装 PDB 符号文件（仅限 MSVC）
+if(MSVC)
+    install(FILES $<TARGET_PDB_FILE:event_report>
+        DESTINATION ${CMAKE_INSTALL_BINDIR}
+        OPTIONAL
+    )
+endif()
+
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/event_report
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
+
+# 安装第三方 DLL 到 bin 目录
+if(THIRD_PARTY_DLLS)
+    install(FILES ${THIRD_PARTY_DLLS}
+        DESTINATION ${CMAKE_INSTALL_BINDIR}
+    )
+endif()
 
 # 导出目标配置
 install(EXPORT EventReportTargets

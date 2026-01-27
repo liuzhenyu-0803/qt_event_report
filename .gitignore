@@ -1,5 +1,6 @@
 # C++ and CMake
 build/
+install/
 bin/
 out/
 CMakeFiles/

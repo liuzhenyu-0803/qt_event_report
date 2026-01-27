@@ -125,6 +125,32 @@ cmake -S . -B build -DBUILD_EXAMPLES=OFF
 cmake --build build --config Release
 ```
 
+### 安装项目
+
+本项目支持通过 CMake 的 `install` 命令进行安装。安装内容包括库文件、头文件、第三方 DLL 以及 CMake 配置文件。
+
+#### 使用脚本一键安装 (Windows)
+直接运行项目根目录下的对应脚本：
+```bash
+# 安装 Release 版本
+.\install_release.bat
+
+# 安装 Debug 版本
+.\install_debug.bat
+```
+
+#### 使用命令行安装
+```bash
+# 1. 配置并设置安装路径（默认为 ./install）
+cmake -S . -B build -DCMAKE_INSTALL_PREFIX=./install
+
+# 2. 编译
+cmake --build build --config Release
+
+# 3. 安装
+cmake --install build --config Release
+```
+
 ## 使用方法
 
 ### 基础示例
