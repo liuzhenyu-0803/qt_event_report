@@ -1,4 +1,7 @@
-# 库源文件和头文件
+# ==============================================================================
+# 库源文件和头文件配置
+# ==============================================================================
+
 set(EVENT_REPORT_SOURCES
     config_service.cpp
     event_report_manager.cpp
@@ -20,13 +23,17 @@ set(EVENT_REPORT_HEADERS
     ${PROJECT_SOURCE_DIR}/include/event_report/event_report_types.h
 )
 
-# 创建共享库
+# ==============================================================================
+# 创建目标
+# ==============================================================================
+
+# 创建共享库 (DLL)
 add_library(event_report SHARED
     ${EVENT_REPORT_SOURCES}
     ${EVENT_REPORT_HEADERS}
 )
 
-# 为库添加别名，遵循现代 CMake 命名约定
+# 为库添加别名，遵循现代 CMake 命名约定 (Namespace::Target)
 add_library(EventReport::event_report ALIAS event_report)
 
 # 设置目标属性
@@ -34,36 +41,48 @@ set_target_properties(event_report PROPERTIES
     VERSION ${PROJECT_VERSION}
     SOVERSION ${PROJECT_VERSION_MAJOR}
     OUTPUT_NAME "event_report"
-    WINDOWS_EXPORT_ALL_SYMBOLS OFF
+    WINDOWS_EXPORT_ALL_SYMBOLS OFF  # 使用导出宏手动控制符号导出
 )
 
-# Qt 自动化工具
+# Qt 自动化工具设置
 set_target_properties(event_report PROPERTIES
     AUTOMOC ON
     AUTOUIC ON
     AUTORCC ON
 )
 
-# DLL 导出宏定义（仅在编译库时生效）
+# 编译定义
 target_compile_definitions(event_report PRIVATE EVENT_REPORT_EXPORTS)
 
-# 头文件包含路径（使用生成器表达式支持构建和安装）
+# ==============================================================================
+# 包含路径设置
+# ==============================================================================
+
+# 头文件包含路径 (使用生成器表达式支持构建和安装)
 target_include_directories(event_report
     PUBLIC
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>
 )
 
-# 查找 Qt5 组件
+# ==============================================================================
+# 依赖库查找与链接
+# ==============================================================================
+
+# 查找 Qt5 依赖组件
 find_package(Qt5 REQUIRED COMPONENTS Core Network Concurrent)
 
-# 链接 Qt 库（PUBLIC 确保依赖传递）
+# 链接 Qt 库 (PUBLIC 确保依赖传递)
 target_link_libraries(event_report
     PUBLIC
         Qt5::Core
         Qt5::Network
         Qt5::Concurrent
 )
+
+# ==============================================================================
+# 后置构建任务
+# ==============================================================================
 
 # 拷贝第三方库到输出目录
 set(THIRD_PARTY_DIR "${PROJECT_SOURCE_DIR}/third_party")
@@ -81,9 +100,13 @@ if(THIRD_PARTY_DLLS)
     endforeach()
 endif()
 
-# 安装规则
+# ==============================================================================
+# 安装规则 (Installation Rules)
+# ==============================================================================
+
 include(GNUInstallDirs)
 
+# 安装目标 (DLL/LIB)
 install(TARGETS event_report
     EXPORT EventReportTargets
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -91,7 +114,7 @@ install(TARGETS event_report
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
 
-# 安装 PDB 符号文件（仅限 MSVC）
+# 安装 PDB 调试符号 (仅限 MSVC)
 if(MSVC)
     install(FILES $<TARGET_PDB_FILE:event_report>
         DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -99,18 +122,19 @@ if(MSVC)
     )
 endif()
 
+# 安装公共头文件
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/event_report
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
-# 安装第三方 DLL 到 bin 目录
+# 安装依赖的第三方 DLL
 if(THIRD_PARTY_DLLS)
     install(FILES ${THIRD_PARTY_DLLS}
         DESTINATION ${CMAKE_INSTALL_BINDIR}
     )
 endif()
 
-# 导出目标配置
+# 导出 CMake 配置文件
 install(EXPORT EventReportTargets
     FILE EventReportTargets.cmake
     NAMESPACE EventReport::

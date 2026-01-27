@@ -1,4 +1,7 @@
-# 示例程序源文件
+# ==============================================================================
+# 示例程序源文件配置
+# ==============================================================================
+
 set(EXAMPLE_SOURCES
     main.cpp
     MainWindow.cpp
@@ -8,7 +11,10 @@ set(EXAMPLE_HEADERS
     MainWindow.h
 )
 
+# ==============================================================================
 # 创建可执行文件
+# ==============================================================================
+
 add_executable(event_report_example
     ${EXAMPLE_SOURCES}
     ${EXAMPLE_HEADERS}
@@ -22,10 +28,14 @@ set_target_properties(event_report_example PROPERTIES
     AUTORCC ON
 )
 
+# ==============================================================================
+# 依赖项链接
+# ==============================================================================
+
 # 查找 Qt5 组件
 find_package(Qt5 REQUIRED COMPONENTS Widgets Network)
 
-# 链接库
+# 链接核心库与依赖项
 target_link_libraries(event_report_example
     PRIVATE
         Qt5::Widgets

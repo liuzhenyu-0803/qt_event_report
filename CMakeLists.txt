@@ -6,7 +6,10 @@ project(EventReport
     LANGUAGES CXX
 )
 
-# 全局 C++ 标准设置
+# ==============================================================================
+# 全局编译选项设置
+# ==============================================================================
+
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -15,9 +18,13 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 if(MSVC)
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /Zi")
     set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "${CMAKE_SHARED_LINKER_FLAGS_RELEASE} /DEBUG /OPT:REF /OPT:ICF")
+    add_compile_options(/MP)
 endif()
 
-# 设置输出目录（使用二进制目录以支持外部构建）
+# ==============================================================================
+# 构建输出目录设置 (统一输出到顶层 build 目录下)
+# ==============================================================================
+
 if(NOT CMAKE_RUNTIME_OUTPUT_DIRECTORY)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
 endif()
@@ -31,12 +38,17 @@ if(NOT CMAKE_ARCHIVE_OUTPUT_DIRECTORY)
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
 endif()
 
-# 选项
+# ==============================================================================
+# 子项目包含
+# ==============================================================================
+
+# 构建示例程序的选项
 option(BUILD_EXAMPLES "Build example applications" ON)
 
-# 包含子项目
+# 包含核心库源码
 add_subdirectory(src)
 
+# 包含示例程序
 if(BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif()
