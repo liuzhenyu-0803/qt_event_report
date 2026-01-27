@@ -17,6 +17,7 @@ set(EVENT_REPORT_HEADERS
     ${PROJECT_SOURCE_DIR}/include/event_report/feature_flag_service.h
     ${PROJECT_SOURCE_DIR}/include/event_report/http_service.h
     ${PROJECT_SOURCE_DIR}/include/event_report/identity_service.h
+    ${PROJECT_SOURCE_DIR}/include/event_report/event_report_types.h
 )
 
 # 创建共享库
