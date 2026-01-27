@@ -16,6 +16,7 @@
 #include <QFile>
 #include <QDir>
 #include <QTextStream>
+#include <QStandardPaths>
 
 namespace event_report
 {
@@ -48,8 +49,8 @@ namespace event_report
 
         void saveEventsToFile(const QJsonArray &eventsData)
         {
-            QString appName = QCoreApplication::applicationName();
-            QString dirPath = QString("C:/Users/Public/%1/event_report").arg(appName);
+            QString baseDir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+            QString dirPath = baseDir + "/event_report";
 
             QDir dir;
             if (!dir.exists(dirPath))
