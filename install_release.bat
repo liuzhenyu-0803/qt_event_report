@@ -5,7 +5,7 @@ setlocal enabledelayedexpansion
 set BUILD_DIR=build
 :: 获取当前脚本所在目录作为项目根目录
 set PROJECT_ROOT=%~dp0
-set INSTALL_DIR=%PROJECT_ROOT%install
+set INSTALL_DIR=%PROJECT_ROOT%install\release
 
 echo ========================================
 echo   EventReport Build and Install Script

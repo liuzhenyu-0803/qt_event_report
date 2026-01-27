@@ -132,10 +132,10 @@ cmake --build build --config Release
 #### 使用脚本一键安装 (Windows)
 直接运行项目根目录下的对应脚本：
 ```bash
-# 安装 Release 版本
+# 安装 Release 版本 (输出到 ./install/release)
 .\install_release.bat
 
-# 安装 Debug 版本
+# 安装 Debug 版本 (输出到 ./install/debug)
 .\install_debug.bat
 ```
 
